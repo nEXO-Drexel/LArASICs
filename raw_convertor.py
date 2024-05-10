@@ -4,7 +4,7 @@ File Name: raw_convertor.py
 Author: GSS/beckert
 Mail: gao.hillhill@gmail.com/be348@drexel.edu
 Description: 
-# Created Time: 7/15/2016 11:47:39 AM GSS/gao.hillhill@gmail.com
+Created Time: 7/15/2016 11:47:39 AM GSS/gao.hillhill@gmail.com
 Last modified: 5/10/2024
 """
 
@@ -13,6 +13,7 @@ import struct
 class RAW_CONV():
     def raw_conv_feedloc(self, raw_data):
         smps = int(len(raw_data) //2)
+        #print('smps: ',smps) smps=103000 printed 8 times
         dataNtuple =struct.unpack_from(">%dH"%(smps),raw_data)
         if (self.jumbo_flag == True):
             pkg_len = int(0x1E06/2)

@@ -757,7 +757,7 @@ class CLS_CONFIG:
         #    self.UDP.write_reg_wib_checked(20, 0x03) #disable data stream and synchronize to Nevis
         #    self.UDP.write_reg_wib_checked(20, 0x00) #enable data stream to Nevis
         d_sts = []
-        print('range(self.sts_num)=',range(self.sts_num))
+        #print('range(self.sts_num)=',range(self.sts_num))
         if not self.ldflg:
             for i in range(self.sts_num):
                 d_sts.append( self.WIB_STATUS(wib_ip) )
@@ -774,7 +774,7 @@ class CLS_CONFIG:
                 else:
                     self.WIB_UDP_CTL(wib_ip, WIB_UDP_EN = True) #Enable HS data from the WIB to PC through UDP
             if not self.ldflg:
-                print('in FEMB_UDPACQ: if not self.ldflg')
+                #print('in FEMB_UDPACQ: if not self.ldflg')
                 for cfg in cfglog:
                     tmp = [cfg]
                     if (cfg[0] == wib_ip) and (cfg[1] == femb_addr):
@@ -789,7 +789,7 @@ class CLS_CONFIG:
                                 pickle.dump(tmp, fp)
                         break
             else:
-                print('in FEMB_UDPACQ: else so self.ldflg=True')
+                #print('in FEMB_UDPACQ: else so self.ldflg=True')
                 runtime =  datetime.now().strftime('%Y_%m_%d_%H_%M_%S') 
                 fn = self.savedir + "/" + "WIB_" + wib_ip.replace(".","_") + "FEMB_" + str(femb_addr) + "_Time" + runtime + ".bin"
                 with open(fn, "wb") as fp:

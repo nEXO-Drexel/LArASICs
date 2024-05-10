@@ -31,12 +31,12 @@ reg_settings_dict=dict(pls_cs=1,\
                     fpgadac_en=0,\
                     asicdac_en=1,\
                     fpgadac_v=0,\
-                    pls_gap = 500,\
+                    pls_gap = 1000,\
                     pls_dly = 10,\
                     mon_cs=0,\
                     data_cs = 0,\
                     sts=1, snc=1, sg0=0, sg1=1, st0=1, st1=1, smn=0, sdf=1,\
-                    slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=0, swdac2=1, dac=0x08 )
+                    slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=0, swdac2=1, dac=0x04 )
 
 #####
 from femb_qc import FEMB_QC
@@ -53,6 +53,8 @@ a.CLS.femb_sws[fembslotno-1]=1
 ## a few more settings-- I haven't needed to modify any of these yet
 a.CLS.WIB_ver = 0x120
 FEMB_infos = a.FEMB_CHKOUT_Input(crateno, PTBslotno)
+#print('FEMB_infos: ',FEMB_infos)
+# ['SLOT0\nCrate1_PTBslot1_WIBslot0\nRT\nN\n', 'SLOT1\nCrate1_PTBslot1_WIBslot1\nRT\nN\n', 'SLOT2\nCrate1_PTBslot1_WIBslot2\nRT\nN\n', 'SLOT3\nCrate1_PTBslot1_WIBslot3\nRT\nN\n']
 a.WIB_IPs = ["192.168.121.1" ]
 a.CLS.UDP.MultiPort = False
 a.CLS.WIB_IPs = a.WIB_IPs
@@ -82,13 +84,12 @@ else:
         print ("Error to create folder %s"%a.databkdir )
         sys.exit()
 
-# First turn on like the mode 1 if statement
+# First turn on like the mode 1 if statement from top_on.py
 a.CLS.pwr_femb_ignore = False 
 a.FEMB_CHKOUT(FEMB_infos, pwr_int_f = False, testcode = 0, ana_flg=True, reg_settings_dict=reg_settings_dict )
 
-## Then turn it off like the mode 0 if statement
+## Then turn it off like the mode 0 if statement from top_on.py
 for wib_ip in a.WIB_IPs:
     a.CLS.FEMBs_CE_OFF_DIR(wib_ip)
 
 print ("Data saved at :", a.userdir)
-print ("Done")

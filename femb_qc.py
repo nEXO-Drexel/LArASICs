@@ -96,7 +96,7 @@ class FEMB_QC:
         self.CLS.FEMBs_SCAN()
         self.CLS.WIBs_CFG_INIT()
         testn = testcode % 10
-        print('FEMB_CHK_ACQ: testn= ',testn)
+        #print('FEMB_CHK_ACQ: testn= ',testn)
         if testn == 0:
             cfglog = self.CLS.CE_CHK_CFG(pls_cs = rs['pls_cs'], \
                                         dac_sel = rs['dac_sel'],\
@@ -114,37 +114,10 @@ class FEMB_QC:
             #14mV/fC, 2.0us, 200mV, FPGA_DAC enable = 0x08
             #cfglog = self.CLS.CE_CHK_CFG(pls_cs=2, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=0, sg1=1, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
             cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=0, sg1=1, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
-        elif testn == 2:
-            #7.8mV/fC, 2.0us, 900mV, FPGA_DAC enable = 0x08
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=1, sg1=0, st0 =1, st1=1, swdac1=1, swdac2=0, data_cs=0)
-        elif testn == 3:
-            #7.8mV/fC, 2.0us, 200mV, FPGA_DAC enable = 0x08
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=1, sg1=0, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
-        elif testn == 4:
-            #14mV/fC, 2.0us, 200mV, ASIC_DAC enable = 0x08
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, asicdac_en=1, sts=1, sg0=0, sg1=1, st0 =1, st1=1, swdac1=0, swdac2=1, dac= 0x08, data_cs=0)
-        elif testn == 5:
-            #14mV/fC, 2.0us, 200mV, RMS 
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, sts=0, sg0=0, sg1=1, st0 =1, st1=1, snc=1)
-        elif testn == 6:
-            #14mV/fC, 2.0us, 900mV, RMS 
-            #cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, sts=0, sg0=0, sg1=1, st0 =1, st1=1, snc=0)
-            #14mV/fC, 0.5us, 200mV, RMS 
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, sts=0, sg0=0, sg1=1, st0 =1, st1=0, snc=1)
-        elif testn == 7:
-            #7.8mV/fC, 2.0us, 200mV, RMS 
-            #cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, sts=0, sg0=1, sg1=0, st0 =1, st1=1, snc=1)
-            #14mV/fC, 2.0us, 200mV, RMS 
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, sts=0, sg0=0, sg1=1, st0 =1, st1=1, snc=1)
-        elif testn == 8:
-            #14mV/fC, 2.0us, 200mV, FPGA_DAC enable = 0x08
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=0, sg1=1, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
-        elif testn == 9:
-            #7.8mV/fC, 2.0us, 200mV, FPGA_DAC enable = 0x08
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=1, sg1=0, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
+        # I deleted the testn 2-9 options
         else:
-            #14mV/fC, 2.0us, 900mV, FPGA_DAC enable = 0x08
-            cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=0, sg1=1, st0 =1, st1=1, swdac1=1, swdac2=0, data_cs=0)
+            print('Something went wrong')
+            sys.exit()
         time.sleep(2)
         print ("FEMB are configurated") 
         self.CLS.savedir = self.databkdir 
@@ -285,7 +258,7 @@ class FEMB_QC:
                     self.raw_data.append([qc_list, None, None, None])
         return qcs
 
-    def FEMB_CHK(self,  femb_addr, cfg, fembdata):
+    def FEMB_CHK(self, femb_addr, cfg, fembdata):
         chn_rmss = []
         chn_peds = []
         chn_pkps = []
@@ -417,7 +390,7 @@ class FEMB_QC:
             ax.plot(x,y, marker=marker, color=color)
 
     def FEMB_PLOT(self, pwr_int_f = False):
-        print('FEMB_PLOT')
+        #print('FEMB_PLOT')
         import matplotlib.pyplot as plt
         if len(self.raw_data) != 0: 
             for a_femb_data in self.raw_data:
