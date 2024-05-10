@@ -1,20 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 File Name: cls_udp.py
-Author: GSS
-Mail: gao.hillhill@gmail.com
+Author: GSS/beckert
+Mail: gao.hillhill@gmail.com/be348@drexel.edu
 Description: 
-Created Time: 3/20/2019 4:52:43 PM
-Last modified: Wed Jan 31 21:24:22 2024
+Created Time: 3/20/2019 4:52:43 PM GSS/gao.hillhill@gmail.com
+Last modified: 5/10/2024
 """
-
-#defaut setting for scientific caculation
-#import numpy
-#import scipy
-#from numpy import *
-#import numpy as np
-#import scipy as sp
-#import pylab as pl
 
 import struct
 import sys 
@@ -352,149 +344,6 @@ class CLS_UDP:
             else:
                 lost_pkg_fg = False
         return rawdataPackets
-
-########################################################################################################
-#Code below for Bloomberg mode
-    def bl_write_reg_send(self, sock_write, WRITE_MESSAGE, wib=True, femb = 0):
-        self.udp_port_update()
-        if (wib == True):
-            sock_write.sendto(WRITE_MESSAGE,(self.UDP_IP, self.UDP_PORT_WREG ))
-        else:
-            if (femb == 0 ):
-                sock_write.sendto(WRITE_MESSAGE,(self.UDP_IP, self.UDPFEMB0_PORT_WREG  ))
-            elif (femb == 1 ):
-                sock_write.sendto(WRITE_MESSAGE,(self.UDP_IP, self.UDPFEMB1_PORT_WREG  ))
-            elif (femb == 2 ):
-                sock_write.sendto(WRITE_MESSAGE,(self.UDP_IP, self.UDPFEMB2_PORT_WREG  ))
-            elif (femb == 3 ):
-                sock_write.sendto(WRITE_MESSAGE,(self.UDP_IP, self.UDPFEMB3_PORT_WREG  ))
-
-    def bl_reg_data_gen(self, reg , data ):
-        regVal = int(reg)
-        if (regVal < 0) or (regVal > self.MAX_REG_NUM):
-            return None
-        dataVal = int(data)
-        if (dataVal < 0) or (dataVal > self.MAX_REG_VAL):
-            return None
-        #crazy packet structure require for UDP interface
-        dataValMSB = ((dataVal >> 16) & 0xFFFF)
-        dataValLSB = dataVal & 0xFFFF
-        WRITE_MESSAGE = struct.pack('HHHHHHHHH',socket.htons( self.KEY1  ), socket.htons( self.KEY2 ),socket.htons(regVal),socket.htons(dataValMSB),
-                socket.htons(dataValLSB),socket.htons( self.FOOTER  ), 0x0, 0x0, 0x0  )
-        return WRITE_MESSAGE
-
-    def bl_select_femb_asic(self, sock_write, femb = 0, asic = 0 ):
-        #write wib
-        wib_femb_cs = self.bl_reg_data_gen(reg=7,data=0x80000000)
-        self.bl_write_reg_send(sock_write, wib_femb_cs, wib=True) #
-        #write femb 
-        asic_cs = asic & 0x0F
-        asic_cs = self.bl_reg_data_gen(reg=7,data=asic_cs)
-        self.bl_write_reg_send(sock_write, asic_cs, wib=False, femb=femb) #
-        #write femb 
-        hs = self.bl_reg_data_gen(reg=17,data=1)
-        self.bl_write_reg_send(sock_write, hs, wib=False, femb=femb) #
-        #write wib
-        wib_asic =  ( ((femb << 16)&0x000F0000) + ((asic << 8) &0xFF00) ) 
-        wib_femb_cs = self.bl_reg_data_gen(reg=7,data= wib_asic | 0x80000000)
-        self.bl_write_reg_send(sock_write, wib_femb_cs, wib=True) #
-        wib_femb_cs = self.bl_reg_data_gen(reg=7,data= wib_asic )
-        self.bl_write_reg_send(sock_write, wib_femb_cs, wib=True) #
-
-    def bl_write_reg_init(self ):
-        sock_write = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Internet, UDP
-        sock_write.setblocking(0)
-        return sock_write
-
-    def bl_write_reg_close(self, sock_write):
-        sock_write.close()
-
-    def bl_get_rawdata_packets(self, path, step, fe_cfg_r, fembs_np = [0,1,2,3], cycle=100):
-        numVal = int(cycle)
-        if (numVal < 0) :
-            print ("FEMB_UDP--> Error record_hs_data: Invalid number of data packets requested")
-            return None
-
-        buf_size = self.bl_reg_data_gen(reg=16,data=0x7F00)
-        nor_mode = self.bl_reg_data_gen(reg=15,data=0)
-        fifo_clr_mode = self.bl_reg_data_gen(reg=15,data=3)
-        acq_mode = self.bl_reg_data_gen(reg=15,data=1)
-        stopacq_mode = self.bl_reg_data_gen(reg=15,data=2)
-        read_mode = self.bl_reg_data_gen(reg=15,data=0x12)
-
-        #set up listening socket
-        sock_data = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Internet, UDP
-        sock_data.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock_data.bind(('',self.UDP_PORT_HSDATA))
-        sock_data.settimeout(0.05)
-
-        sock_write = self.bl_write_reg_init()
-        self.bl_write_reg_send(sock_write, buf_size, wib=True) #set buffer size
-
-        for read_no in range(0,numVal,1):
-            print ("Read cycle = %d "%read_no)
-            self.bl_write_reg_send(sock_write, nor_mode, wib=True) #
-            time.sleep(0.001)
-            self.bl_write_reg_send(sock_write, fifo_clr_mode, wib=True) #
-
-            empty_udp = False
-            while ( empty_udp != True ):
-                try:
-                    data = sock_data.recv(8192)
-                except socket.timeout:
-                    self.udp_hstimeout_cnt = self.udp_hstimeout_cnt  + 1
-                    #print "Empty UDP buffer"
-                    empty_udp = True 
-                    break
-
-            self.bl_write_reg_send(sock_write, acq_mode, wib=True) #
-            time.sleep(0.01) #10ms
-            self.bl_write_reg_send(sock_write, stopacq_mode, wib=True) #
-
-            for femb in fembs_np:
-                for asic in range(0,8,2):
-                    self.select_femb_asic_bromberg(sock_write, femb, asic )
-                    rawdataPackets = b"" 
-                    filename = path + "/" + step +"_FEMB" + str(femb) + "CHIP" + str(asic) + "_" + format(fe_cfg_r,'02X') + "_" + format(read_no,'04d') + ".bin"
-
-                    self.bl_write_reg_send(sock_write, read_mode, wib=True) #
-                    for packet in range(0,1000,1):
-                        data = None
-                        timeout_flg = False
-                        try:
-                            data = sock_data.recv(8192)
-                        except socket.timeout:
-                            self.udp_hstimeout_cnt = self.udp_hstimeout_cnt  + 1
-                            timeout_flg = True
-                        if data != None :
-                            #rawdataPackets.append(data)
-                            rawdataPackets +=data
-                        if (timeout_flg):
-                            break
-        
-                    with open(filename,"wb") as f:
-                        f.write(rawdataPackets) 
-
-        self.bl_write_reg_send(sock_write, nor_mode, wib=True) #
-        time.sleep(0.1)
-        empty_udp = False
-        data = None
-        while ( empty_udp != True ):
-            try:
-                data = sock_data.recv(8192)
-            except socket.timeout:
-                self.udp_hstimeout_cnt = self.udp_hstimeout_cnt  + 1
-                print ("Can't return to normal mode")
-                sys.exit()
-            if data!= None: 
-                print ("Brombreg mode is DONE, return to normal mode sucessfully")
-                empty_udp = True 
-                break
-
-        sock_data.close()
-        self.bl_write_reg_close(sock_write)
-#Code above for Bloomberg mode
-########################################################################################################
 
     def udp_port_update(self):
         if self.MultiPort:

@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-File Name: cls_femb_config.py
-Author: GSS
-Mail: gao.hillhill@gmail.com
+File Name: femb_qc.py
+Author: GSS/beckert
+Mail: gao.hillhill@gmail.com/be348@drexel.edu
 Description: 
-Created Time: 3/20/2019 4:50:34 PM
-Last modified: 2/22/2024 2:10:51 PM
+Created Time: 3/20/2019 4:50:34 PM GSS/gao.hillhill@gmail.com
+Last modified: 5/10/2024
 """
 
-#defaut setting for scientific caculation
-#import numpy
-#import scipy
-#from numpy import *
 import numpy as np
-#import scipy as sp
-#import pylab as pl
 
 import sys 
 import os
@@ -48,10 +42,7 @@ class FEMB_QC:
         self.raw_data = []
         self.env = "RT"
         self.avg_cnt = 1
-        #with open(self.user_f, 'a') as fp:
-        #    pass
-        #with open(self.f_qcindex, 'a') as fp:
-        #    pass
+
 
     def FEMB_INDEX_LOAD(self):
         self.femb_qclist = []
@@ -73,7 +64,6 @@ class FEMB_QC:
         FEMBlist = self.FEMB_INDEX_LOAD()
         FEMB_infos = []
         env = self.env
-        #env = input("Test is performed at (RT or LN)? :")
         for i in range(4):
             while (True):
                 print ("Please enter ID of FEMB in WIB slot%d (input \"OFF\" if no FEMB): "%i)
@@ -722,49 +712,4 @@ class FEMB_QC:
         self.raw_data = []
         #print ("Result is saved in %s"%self.user_f )
 #        self.CLS.FEMBs_CE_OFF()
-
-
-
-##warm test
-#flg = "N"
-#while ( "Y" not in flg):
-#    time.sleep(2)
-#    flg = input("Is Warm Test Ready(Y)?")
-#if "Y" in flg:
-#    a.FEMB_QC_PWR( FEMB_infos)
-#    a.QC_FEMB_BL_T_PLOT(FEMB_infos)
-#
-##cold test
-#flg = "N"
-#while ( "Y" not in flg):
-#    time.sleep(2)
-#    flg = input("Is Cold Test Ready(Y)?")
-#if "Y" in flg:
-#    a.env = "LN"
-#    if ("LN" in FEMB_infos[0]):
-#        a.FEMB_QC_PWR( FEMB_infos, pwr_int_f = True)
-#        a.QC_FEMB_BL_T_PLOT(FEMB_infos, pwr_int_f = True)
-#    a.FEMB_QC_PWR( FEMB_infos)
-#    a.QC_FEMB_BL_T_PLOT(FEMB_infos)
-
-
-
-
-#FEMB_infos = ['SLOT0\nFC1-SAC1\nRT\nN\n', 'SLOT1\nFC2-SAC2\nRT\nN\n', 'SLOT2\nFC3-SAC3\nRT\nN\n', 'SLOT3\nFC4-SAC4\nRT\nN\n']
-#FEMB_infos = ['SLOT0\nFC022-TAC01\nRT\nN\n', 'SLOT1\nFC026-TAC02\nRT\nN\n', 'SLOT2\nFC037-TAC03\nRT\nN\n', 'SLOT3\nFC024-TAC04\nRT\nN\n']
-#FEMB_infos = ['SLOT0\nFC022-TAC01\nLN\nN\n', 'SLOT1\nFC026-TAC02\nLN\nN\n', 'SLOT2\nFC037-TAC03\nLN\nN\n', 'SLOT3\nFC024-TAC04\nLN\nN\n']
-#FEMB_infos = ['SLOT0\nFC1-SAC1\nRT\nN\n', 'SLOT1\nFC2-SAC2\nRT\nN\n', 'SLOT2\nFC3-SAC3\nRT\nN\n', 'SLOT3\nFC4-SAC4\nRT\nN\n']
-#a.FEMB_QC_PWR( FEMB_infos)
-#a.FEMB_PLOT()
-#a.QC_FEMB_BL_T_PLOT(FEMB_infos)
-#a.FEMB_BL_RB(snc=1, sg0=0, sg1=1, st0 =1, st1=1, slk0=0, slk1=0, sdf=1) #default 14mV/fC, 2.0us, 200mV
-#1a.FEMB_Temp_RB()
-#a.FEMB_BL_RB() #default 14mV/fC, 2.0us, 200mV
-#fn =a.databkdir  + "\FM_QC_RT_2019_04_09_18_26_28.bin"
-#FEMB_QC_RT_2019_04_23_19_57_46
-#with open(fn, 'rb') as f:
-#     a.raw_data = pickle.load(f)
- 
-
-
 

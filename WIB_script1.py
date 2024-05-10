@@ -2,7 +2,7 @@
 """
 File Name: WIB_script1.py
 Author: Brady Eckert
-Email: beckert@bnl.gov or brady.eckert@drexel.edu
+Email: beckert@bnl.gov/brady.eckert@drexel.edu
 Description: 
 !Modified from top_on.py (nEXO branch) in April 2024!
 This code will communicate with the WIB and FEMB to run test pulses. The goal is for it to be simple to change ASIC settings from this file. It will reduce the number of inputs used in top_on.py; also will add comments

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-File Name: cls_femb_config.py
-Author: GSS
-Mail: gao.hillhill@gmail.com
+File Name: setdatadir.py
+Author: GSS/beckert
+Mail: gao.hillhill@gmail.com/be348@drexel.edu
 Description: 
-Created Time: 3/20/2019 4:50:34 PM
-Last modified: 4/30/2024 by BEckert
+Created Time: 3/20/2019 4:50:34 PM GSS/gao.hillhill@gmail.com
+Last modified: 4/30/2024
 """
 from datetime import datetime
 rundate = datetime.now().strftime('%Y_%m_%d')

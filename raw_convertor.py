@@ -1,23 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-File Name: init_femb.py
-Author: GSS
-Mail: gao.hillhill@gmail.com
+File Name: raw_convertor.py
+Author: GSS/beckert
+Mail: gao.hillhill@gmail.com/be348@drexel.edu
 Description: 
-Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/8/2019 6:44:50 PM
+# Created Time: 7/15/2016 11:47:39 AM GSS/gao.hillhill@gmail.com
+Last modified: 5/10/2024
 """
 
-#defaut setting for scientific caculation
-#import numpy
-#import scipy
-#from numpy import *
-#import numpy as np
-#import scipy as sp
-#import pylab as pl
 import numpy as np
 import struct
-
 class RAW_CONV():
     def raw_conv_feedloc(self, raw_data):
         smps = int(len(raw_data) //2)

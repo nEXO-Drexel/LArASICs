@@ -1,20 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 File Name: fe_reg_mapping.py
-Author: GSS
-Mail: gao.hillhill@gmail.com
+Author: GSS/beckert
+Mail: gao.hillhill@gmail.com/be348@drexel.edu
 Description: 
-Created Time: 3/20/2019 4:50:11 PM
-Last modified: 3/29/2019 3:31:47 PM
+Created Time: 3/20/2019 4:50:11 PM GSS/gao.hillhill@gmail.com
+Last modified: 5/10/2024
 """
-
-#defaut setting for scientific caculation
-#import numpy
-#import scipy
-#from numpy import *
-#import numpy as np
-#import scipy as sp
-#import pylab as pl
 
 import string
 class FE_REG_MAPPING:
