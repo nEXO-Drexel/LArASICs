@@ -92,7 +92,7 @@ a.CLS.CE_MON_CFG(pls_cs = rs['pls_cs'], \
                 pls_dly = rs['pls_dly'], \
                 mon_cs = rs['mon_cs'], \
                 data_cs = rs['data_cs'],\
-                sts=rs['sts'], snc=rs['snc'], sg0=rs['sg0'], sg1=rs['sg1'], st0=rs['st0'], st1=rs['st1'], smn=rs['smn'], sdf=rs['sdf'],\
+                sts=rs['sts'], snc=rs['snc'], sg0=rs['sg0'], sg1=rs['sg1'], st0=rs['st0'], st1=rs['st1'],  sdf=rs['sdf'],\
                 slk0=rs['slk0'], stb1=rs['stb1'], stb=rs['stb'], s16=rs['s16'], slk1=rs['slk1'], sdc=rs['sdc'],swdac1=rs['swdac1'], swdac2=rs['swdac2'], dac=rs['dac'], \
                 monchn = monchnno)
 

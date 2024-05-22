@@ -1,4 +1,6 @@
 ## Filetypes and folders to ignore ##
 **/__pycache__
+*.pyc
+
 
 

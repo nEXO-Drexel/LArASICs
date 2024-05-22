@@ -28,15 +28,15 @@ from raw_convertor import RAW_CONV
 ##  A GUI should be able to change the values for the relevant keys we want to modify
 reg_settings_dict=dict(pls_cs=1,\
                     dac_sel=1,\
-                    fpgadac_en=0,\
-                    asicdac_en=1,\
-                    fpgadac_v=0,\
-                    pls_gap = 1000,\
+                    fpgadac_en=1,\
+                    asicdac_en=0,\
+                    fpgadac_v=0x05,\
+                    pls_gap = 500,\
                     pls_dly = 10,\
                     mon_cs=0,\
                     data_cs = 0,\
-                    sts=1, snc=1, sg0=0, sg1=1, st0=1, st1=1, smn=0, sdf=1,\
-                    slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=0, swdac2=1, dac=0x04 )
+                    sts=1, snc=1, sg0=0, sg1=1, st0=0, st1=0, smn=0, sdf=1,\
+                    slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=1, swdac2=0, dac=0x05 )
 
 #####
 from femb_qc import FEMB_QC

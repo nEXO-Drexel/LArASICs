@@ -26,9 +26,9 @@ from shutil import copyfile
 class FEMB_QC:
     def __init__(self):
         self.jumbo_flag = False
-        self.userdir = "/Users/shanshangao/Documents/SBND/0621/"
+        self.userdir = "/Users/be348/nexoStuff/LArASIC/code/"
         self.user_f = self.userdir + "tmp.csv"
-        self.databkdir = "/Users/shanshangao/Documents/SBND/0621/PreEast"
+        self.databkdir = "/Users/be348/nexoStuff/LArASIC/code/data"
         self.f_qcindex = self.databkdir + "tmp.csv"
         self.femb_qclist = []
         self.WIB_IPs = ["192.168.121.1"]
@@ -89,9 +89,9 @@ class FEMB_QC:
         #    self.CLS.val = 400 
         #else:
         #    self.CLS.val = 600 
-        self.CLS.sts_num = 1
-        self.CLS.f_save = False
-        self.CLS.FM_only_f = False
+        self.CLS.sts_num = 1 #default is 1
+        self.CLS.f_save = False #default is True
+        self.CLS.FM_only_f = False #default is False
         self.CLS.WIBs_SCAN()
         self.CLS.FEMBs_SCAN()
         self.CLS.WIBs_CFG_INIT()

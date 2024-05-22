@@ -130,5 +130,3 @@ elif modeno == 4:
         a.CLS.TPC_UDPACQ(cfglog)
 print ("Data save at :", a.userdir)
 print ("Well Done")
-
-
