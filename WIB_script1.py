@@ -30,13 +30,13 @@ reg_settings_dict=dict(pls_cs=1,\
                     dac_sel=1,\
                     fpgadac_en=1,\
                     asicdac_en=0,\
-                    fpgadac_v=0x05,\
+                    fpgadac_v=0x08,\
                     pls_gap = 500,\
                     pls_dly = 10,\
                     mon_cs=0,\
                     data_cs = 0,\
                     sts=1, snc=1, sg0=0, sg1=1, st0=0, st1=0, smn=0, sdf=1,\
-                    slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=1, swdac2=0, dac=0x05 )
+                    slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=1, swdac2=0, dac=0x0 )
 
 #####
 from femb_qc import FEMB_QC
@@ -46,7 +46,7 @@ a=FEMB_QC()
 crateno=1         # WarmInterfaceElectronicsCrate number, not relevant for testing single WIBs
 PTBslotno=1       # PowerTimingBackplate number, not relevant for testing single WIBs
 fembno_str="739"  # Each FEMB should have some identifier number on it
-a.env="RT"        # test environment: e.g. RT for room temp, LN for liquid nitrogen, etc.
+a.env="RTShielded"        # test environment: e.g. RT for room temp, LN for liquid nitrogen, etc.
 fembslotno=4      # which slot of the WIB the FEMB is plugged in to
 a.CLS.femb_sws[fembslotno-1]=1
 
