@@ -1,3 +1,16 @@
+"""
+File Name: Gui1.py
+Author: Brady Eckert
+Email: be348@drexel.edu
+Description: 
+!Copied from Kamayani Richhariya's GUI_LArASIC.ipynb!
+This code will ask for user input to change settings on ASICs aboard the FEMB. 
+Some other future additions: inputs for how much data to take, data directory, other identifiers like WIB or FEMB number, FEMB slot number, have GO! trigger DAQ for some amount of data to take, some cool name/acronym for this, 
+re_settings_dict currently isnt being changed, so selecting different values and hitting GO! doesnt change the respective values
+Remove global monitor option, that can just be off
+Last modified: 2024 Jul 12
+"""
+
 import tkinter
 from tkinter import *
 from tkinter.ttk import *
