@@ -78,6 +78,7 @@ class CLS_CONFIG:
             for i in range(5):
                 wib_ver_rb = self.UDP.read_reg_wib (0xFF)
                 wib_ver_rb = self.UDP.read_reg_wib (0xFF)
+                print("wib_ver_rb= ",wib_ver_rb)
                 #if ((wib_ver_rb&0x0F00) == wib_verid&0x0F00) and ( wib_ver_rb >= 0):
                 if ((wib_ver_rb&0x0FFF) == self.WIB_ver&0x0FFF) and ( wib_ver_rb >= 0):
                     print ("WIB_V%s with IP = %s is found"%(hex(wib_ver_rb&0x0FFF), wib_ip)) 
