@@ -1,13 +1,13 @@
 """
 File Name: Gui1.py
-Author: Brady Eckert
+Author: Kamayani Richhariya (and Brady Eckert)
 Email: be348@drexel.edu
 Description: 
 !Copied from Kamayani Richhariya's GUI_LArASIC.ipynb!
-This code will ask for user input to change settings on ASICs aboard the FEMB. 
-Some other future additions: inputs for how much data to take, data directory, other identifiers like WIB or FEMB number, FEMB slot number, have GO! trigger DAQ for some amount of data to take, some cool name/acronym for this, 
-re_settings_dict currently isnt being changed, so selecting different values and hitting GO! doesnt change the respective values
-Remove global monitor option, that can just be off
+This code will ask for user input to change settings on LArASICs aboard the FEMB. 
+Some other future additions: inputs for how much data to take (control a.CLS.val and number of cycles to run a.FEMB_CHKOUT), data directory(savedir and a.userdir), other identifiers like WIB or FEMB number, FEMB slot number, have GO! trigger DAQ for some amount of data to take, some cool name/acronym for this, 
+The print at the end for re_settings_dict currently isnt showing values being changed, so selecting different values and hitting GO! doesnt change the respective values
+Remove global monitor option, that can just be set to off
 Last modified: 2024 Jul 12
 """
 
@@ -28,12 +28,12 @@ from setdatadir import savedir #change this in setdatadir.py
 from cls_config import CLS_CONFIG
 from raw_convertor import RAW_CONV
 m = tkinter.Tk()
-m.geometry("900x300")
-Title = tkinter.Label(m, text='ASIC settings control')
+m.geometry("1100x300")
+Title = tkinter.Label(m, text='LArASIC settings control')
 Title.grid(row=0, column=3)
 
 ### REG SETTINGS, see documentation for explanation of each key
-##  A GUI should be able to change the values for the relevant keys we want to modify
+## The GUI will be able to change the values for these keys that control test pulses and DAQ
 reg_settings_dict=dict(pls_cs=1,\
                     dac_sel=1,\
                     fpgadac_en=1,\
