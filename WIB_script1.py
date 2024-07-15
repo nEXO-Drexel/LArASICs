@@ -53,7 +53,7 @@ fembslotno=1      # which slot of the WIB the FEMB is plugged in to
 a.CLS.femb_sws[fembslotno-1]=1
 
 ## a few more settings-- I haven't needed to modify any of these yet
-a.CLS.WIB_ver = 0x120
+a.CLS.WIB_ver = 0x119
 FEMB_infos = a.FEMB_CHKOUT_Input(crateno, PTBslotno)
 #print('FEMB_infos: ',FEMB_infos)
 a.WIB_IPs = ["192.168.121.1"]
