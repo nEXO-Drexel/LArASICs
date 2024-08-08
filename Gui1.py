@@ -5,7 +5,11 @@ Email: be348@drexel.edu
 Description: 
 !Copied from Kamayani Richhariya's GUI_LArASIC.ipynb!
 This code will ask for user input to change settings on LArASICs aboard the FEMB. 
-Some other future additions: inputs for how much data to take (control a.CLS.val and number of cycles to run a.FEMB_CHKOUT), data directory(savedir and a.userdir), other identifiers like WIB or FEMB number, FEMB slot number, have GO! trigger DAQ for some amount of data to take, some cool name/acronym for this, 
+Some other future additions: inputs for how much data to take (control a.CLS.val and number of cycles to run a.FEMB_CHKOUT), other identifiers like WIB or FEMB number, FEMB slot number, have GO! close GUI and continue to trigger DAQ for some amount of data to take, some cool name/acronym for this, Drexel nEXO and BNL logo
+wibno_str= "P22" #string
+fembno_str="731"  # FEMB identifier number string
+a.env="RT"        # test environment string
+fembslotno=1    # int
 The print at the end for re_settings_dict currently isnt showing values being changed, so selecting different values and hitting GO! doesnt change the respective values
 Remove global monitor option, that can just be set to off
 Last modified: 2024 Jul 12
@@ -46,10 +50,12 @@ reg_settings_dict=dict(pls_cs=1,\
                     sts=1, snc=1, sg0=0, sg1=1, st0=0, st1=0, smn=0, sdf=1,\
                     slk0 = 0, stb1 = 0, stb = 0, s16=0, slk1=0, sdc=0, swdac1=1, swdac2=0, dac=0x0 )
 
+
 def setting_Gain(Gain_radio_dict):
     if Gain_radio == 1:
         Gain_radio_dict['sg0'] = 0
         Gain_radio_dict['sg1'] = 0
+        #reg_settings_dict['sg0']=0
     elif Gain_radio == 2:
         Gain_radio_dict['sg0'] = 1
         Gain_radio_dict['sg1'] = 0
