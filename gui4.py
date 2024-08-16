@@ -3,8 +3,10 @@ File Name: gui4.py
 Author: Brady Eckert and Kamayani Richhariya
 Email: be348@drexel.edu
 Description: 
-A class for the LArASIC gui. This allows sets up radio buttons for LArASIC settings and test pulses. Also has entry widgets for some input strings. The apply settings button sets reg_settings_dict to the selected options and retrieves text entries. The take data button is a filler. The show plot button shows a basic plot in the window.
-To Do in gui4.py: incorporate the data taking functions from WIB_script3 or SiPM_script1
+A class for the LArASIC gui. This allows sets up radio buttons for LArASIC settings and test pulses. Also has entry widgets for some input strings.
+ The apply settings button sets reg_settings_dict to the selected options and retrieves text entries. 
+ The take data button SHOULD take data using the selected register setiings. 
+ The show plot button shows a basic plot in the window. Future iterations could display it in the window
 Usage: $ python3 /gui4.py
 Last modified: 2024 Aug 15
 """
@@ -43,50 +45,50 @@ class gui_class:
 
         ## making the radio buttons and labels
         self.set_radio_buttons()
-        self.L1 = tk.Label(m, text='Gain (mV/fC)').grid(row=1, column=1)
-        self.R1 = tk.Radiobutton(m, text="4.7", variable=self.Gain_radio, value=4.7).grid(row=2, column=1)
-        self.R2 = tk.Radiobutton(m, text="7.8", variable=self.Gain_radio, value=7.8).grid(row=3, column=1)
-        self.R3 = tk.Radiobutton(m, text="14" , variable=self.Gain_radio, value=14 ).grid(row=4, column=1)
-        self.R4 = tk.Radiobutton(m, text="25" , variable=self.Gain_radio, value=25 ).grid(row=5, column=1)
+        self.Gain  = tk.Label(m, text='Gain (mV/fC)').grid(row=1, column=1)
+        self.Gain1 = tk.Radiobutton(m, text="4.7", variable=self.Gain_radio, value=4.7).grid(row=2, column=1)
+        self.Gain2 = tk.Radiobutton(m, text="7.8", variable=self.Gain_radio, value=7.8).grid(row=3, column=1)
+        self.Gain3 = tk.Radiobutton(m, text="14" , variable=self.Gain_radio, value=14 ).grid(row=4, column=1)
+        self.Gain4 = tk.Radiobutton(m, text="25" , variable=self.Gain_radio, value=25 ).grid(row=5, column=1)
 
-        self.L2 = tk.Label(m, text='Channel baseline').grid(row=1, column=2)
-        self.R5 = tk.Radiobutton(m, text="200 mV - collection mode", variable=self.baseline_radio, value=1).grid(row=2, column=2)
-        self.R6 = tk.Radiobutton(m, text="900 mV - induction mode" , variable=self.baseline_radio, value=0).grid(row=3, column=2)
+        self.Baseline  = tk.Label(m, text='Channel baseline').grid(row=1, column=2)
+        self.Baseline1 = tk.Radiobutton(m, text="200 mV - collection mode", variable=self.baseline_radio, value=1).grid(row=2, column=2)
+        self.Baseline2 = tk.Radiobutton(m, text="900 mV - induction mode" , variable=self.baseline_radio, value=0).grid(row=3, column=2)
 
-        self.L3 = tk.Label(m, text='Unity Buffer').grid(row=1, column=3)
-        self.R7 = tk.Radiobutton(m, text="0 - bypass buffer", variable=self.SBF_radio, value=0).grid(row=2, column=3)  
-        self.R8 = tk.Radiobutton(m, text="1 - engage buffer", variable=self.SBF_radio, value=1).grid(row=3, column=3) 
+        self.UBuffer  = tk.Label(m, text='Unity Buffer').grid(row=1, column=3)
+        self.UBuffer1 = tk.Radiobutton(m, text="0 - bypass buffer", variable=self.SBF_radio, value=0).grid(row=2, column=3)  
+        self.UBuffer2 = tk.Radiobutton(m, text="1 - engage buffer", variable=self.SBF_radio, value=1).grid(row=3, column=3) 
 
-        self.L4  = tk.Label(m, text='Shaping_time (us)').grid(row=1, column=4)
-        self.R9  = tk.Radiobutton(m, text="0.5", variable=self.Shaping_radio, value=0.5).grid(row=2, column=4)
-        self.R10 = tk.Radiobutton(m, text="1.0", variable=self.Shaping_radio, value=1.0).grid(row=3, column=4)
-        self.R11 = tk.Radiobutton(m, text="2.0", variable=self.Shaping_radio, value=2.0).grid(row=4, column=4)
-        self.R12 = tk.Radiobutton(m, text="3.0", variable=self.Shaping_radio, value=3.0).grid(row=5, column=4)
+        self.ST  = tk.Label(m, text='Shaping time (us)').grid(row=1, column=4)
+        self.ST1 = tk.Radiobutton(m, text="0.5", variable=self.Shaping_radio, value=0.5).grid(row=2, column=4)
+        self.ST2 = tk.Radiobutton(m, text="1.0", variable=self.Shaping_radio, value=1.0).grid(row=3, column=4)
+        self.ST3 = tk.Radiobutton(m, text="2.0", variable=self.Shaping_radio, value=2.0).grid(row=4, column=4)
+        self.ST4 = tk.Radiobutton(m, text="3.0", variable=self.Shaping_radio, value=3.0).grid(row=5, column=4)
 
-        self.L5  = tk.Label(m, text='Input').grid(row=1, column=5)
-        self.R13 = tk.Radiobutton(m, text="Test pulse: FPGA DAC", variable=self.Input_radio, value=1).grid(row=2, column=5)
-        self.R14 = tk.Radiobutton(m, text="Test pulse: ASIC DAC", variable=self.Input_radio, value=2).grid(row=3, column=5)
-        self.R15 = tk.Radiobutton(m, text="External source"     , variable=self.Input_radio, value=3).grid(row=4, column=5)
+        self.Input= tk.Label(m, text='Input').grid(row=1, column=5)
+        self.FPGA = tk.Radiobutton(m, text="Test pulse: FPGA DAC", variable=self.Input_radio, value=1).grid(row=2, column=5)
+        self.ASIC = tk.Radiobutton(m, text="Test pulse: ASIC DAC", variable=self.Input_radio, value=2).grid(row=3, column=5)
+        self.EXT  = tk.Radiobutton(m, text="External source"     , variable=self.Input_radio, value=3).grid(row=4, column=5)
 
-        self.L6  = tk.Label(m, text='FEMB Slot #').grid(row=1, column=6)
-        self.R16 = tk.Radiobutton(m, text="1", variable=self.fembslot_radio, value=1).grid(row=2, column=6)
-        self.R17 = tk.Radiobutton(m, text="2", variable=self.fembslot_radio, value=2).grid(row=3, column=6)
-        self.R18 = tk.Radiobutton(m, text="3", variable=self.fembslot_radio, value=3).grid(row=4, column=6)
-        self.R19 = tk.Radiobutton(m, text="4", variable=self.fembslot_radio, value=4).grid(row=5, column=6)
+        self.FEMBSlot  = tk.Label(m, text='FEMB Slot #').grid(row=1, column=6)
+        self.FEMBSlot1 = tk.Radiobutton(m, text="1", variable=self.fembslot_radio, value=1).grid(row=2, column=6)
+        self.FEMBSlot2 = tk.Radiobutton(m, text="2", variable=self.fembslot_radio, value=2).grid(row=3, column=6)
+        self.FEMBSlot3 = tk.Radiobutton(m, text="3", variable=self.fembslot_radio, value=3).grid(row=4, column=6)
+        self.FEMBSlot4 = tk.Radiobutton(m, text="4", variable=self.fembslot_radio, value=4).grid(row=5, column=6)
 
-        self.Apply = tk.Button(m, text="Apply settings", command=self.applybutton).grid(row=8, column=2, sticky='E')
-        self.Go    = tk.Button(m, text="Take Data", command=self.takedatabutton).grid(row=8, column=3)
+        self.Apply    = tk.Button(m, text="Apply settings", command=self.applybutton).grid(row=8, column=2, sticky='E')
+        self.TakeData = tk.Button(m, text="Take Data", command=self.takedatabutton).grid(row=8, column=3)
         self.Showplot = tk.Button(m, text="Show Plot",command=self.showplot).grid(row=8, column=4, sticky='W')
 
         ## entries
-        self.L7 = tk.Label(m, text="WIB #").grid(row=6, column=1, sticky='E')
-        self.E1 = tk.Entry(m, textvariable=self.wibno_radio).grid(row=6, column=2,sticky='W')
+        self.WIBEntry = tk.Label(m, text="WIB #").grid(row=6, column=1, sticky='E')
+        self.WIBEntry1 = tk.Entry(m, textvariable=self.wibno_radio).grid(row=6, column=2,sticky='W')
 
-        self.L8 = tk.Label(m, text='FEMB #').grid(row=6, column=3, sticky='E')
-        self.E2 = tk.Entry(m, textvariable=self.fembno_radio).grid(row=6, column=4,sticky='W')
+        self.FEMBEntry = tk.Label(m, text='FEMB #').grid(row=6, column=3, sticky='E')
+        self.FEMBEntry1 = tk.Entry(m, textvariable=self.fembno_radio).grid(row=6, column=4,sticky='W')
 
-        self.L9 = tk.Label(m, text='Environment').grid(row=6, column=5, sticky='E')
-        self.E3 = tk.Entry(m, textvariable=self.env_radio).grid(row=6, column=6,sticky='W')
+        self.ENVEntry = tk.Label(m, text='Environment').grid(row=6, column=5, sticky='E')
+        self.ENVEntry1 = tk.Entry(m, textvariable=self.env_radio).grid(row=6, column=6,sticky='W')
 
     ## set up radio buttons all together
     def set_radio_buttons(self):
