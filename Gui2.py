@@ -11,6 +11,10 @@ import tkinter as tk
 #from tkinter import *
 #from tkinter.ttk import *
 import numpy as np
+import matplotlib 
+matplotlib.use('TkAgg')
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sys 
 import os
 import string
@@ -25,16 +29,15 @@ from cls_config import CLS_CONFIG
 from raw_convertor import RAW_CONV
 
 m = tk.Tk()
-m.geometry("800x300")
-Title = tk.Label(m, text='LArASIC settings control')
-Title.grid(row=0, column=3)
+m.geometry("750x500")
+Title = tk.Label(m, text='LArASIC settings control').grid(row=0, column=3)
 
 # radio button variables
-Gain_radio = tk.DoubleVar()  
-Shaping_time_radio = tk.DoubleVar()  
-Channel_baseline_radio = tk.IntVar()  
-SBF_radio = tk.IntVar()  
-Input_radio = tk.IntVar()  
+Gain_radio = tk.DoubleVar()
+Shaping_time_radio = tk.DoubleVar()
+Channel_baseline_radio = tk.IntVar(value=1)
+SBF_radio = tk.IntVar(value=1)
+Input_radio = tk.IntVar()
 
 ## functions for using the radio variables to modify the dictionary
 def set_Gain(Gain_radio_dict):
@@ -44,14 +47,14 @@ def set_Gain(Gain_radio_dict):
     elif Gain_radio.get() ==  25: return dict(Gain_radio_dict, sg0=1,sg1=1)
 
 def set_Shaping_time(Shaping_time_dict):
-    if   Shaping_time_radio.get() == 0.5: return dict(Shaping_time_dict,st0=1,st1=0) 
+    if   Shaping_time_radio.get() == 0.5: return dict(Shaping_time_dict,st0=1,st1=0)
     elif Shaping_time_radio.get() == 1.0: return dict(Shaping_time_dict,st0=0,st1=0)
     elif Shaping_time_radio.get() == 2.0: return dict(Shaping_time_dict,st0=1,st1=1)
     elif Shaping_time_radio.get() == 3.0: return dict(Shaping_time_dict,st0=0,st1=1)
 
 def set_Input(Input_dict):
     if Input_radio.get() == 1:
-        Input_dict['pls_cs'] = 1 
+        Input_dict['pls_cs'] = 1
         Input_dict['dac_sel'] = 1
         Input_dict['fpgadac_en'] = 1
         Input_dict['fpgadac_v'] = 0x08
@@ -125,11 +128,8 @@ R15 = tk.Radiobutton(m, text="External source"     , variable=Input_radio, value
 def applybutton():
     print('Applying settings to register dictionary')
     ### REG SETTINGS, see documentation for explanation of each key
-    reg_settings_dict=dict(pls_cs=1, dac_sel=1,\
-                    fpgadac_en=1, asicdac_en=0,\
-                    fpgadac_v=0x00,\
-                    pls_gap = 500,\
-                    pls_dly = 10,\
+    reg_settings_dict=dict(pls_cs=1, dac_sel=1, fpgadac_en=1, asicdac_en=0,\
+                    fpgadac_v=0x00, pls_gap = 500, pls_dly = 10,\
                     mon_cs=0,\
                     data_cs = 0,\
                     sts=1, snc=1, sg0=0, sg1=1, st0=0, st1=0, smn=0, sdf=1,\
@@ -140,7 +140,24 @@ def applybutton():
     reg_settings_dict = dict(reg_settings_dict, sdf=SBF_radio.get(), snc= Channel_baseline_radio.get())
     #print(reg_settings_dict)
 
-Apply = tk.Button(m, text="Apply settings", command=applybutton).grid(row=6, column=3) 
+Apply = tk.Button(m, text="Apply settings", command=applybutton).grid(row=6, column=2) 
+
+def gobutton():
+    print('you hit go')
+    print(reg_settings_dict)
+
+Go = tk.Button(m, text="Take Data", command=gobutton).grid(row=6, column=3)
+
+def showplot():
+    print('hit showplot')
+    fig=Figure(figsize=(3,3),dpi=100)
+    y=[i**2 for i in range(-10,11,1)]
+    plot1 = fig.add_subplot(111)
+    plot1.plot(y)
+    mycanvas = FigureCanvasTkAgg(fig,master=m)
+    mycanvas.get_tk_widget().grid(row=8,rowspan=3,column=2,columnspan=3)
+
+Showplot = tk.Button(m, text="Show Plot",command=showplot).grid(row=6,column=4)
 
 m.mainloop()
 

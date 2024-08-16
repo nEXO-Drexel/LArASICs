@@ -12,7 +12,7 @@ a.env="RT"        # test environment string
 fembslotno=1    # int
 The print at the end for re_settings_dict currently isnt showing values being changed, so selecting different values and hitting GO! doesnt change the respective values
 Remove global monitor option, that can just be set to off
-Last modified: 2024 Jul 12
+Last modified: 2024 Aug 13
 """
 
 import tkinter
