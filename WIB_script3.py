@@ -36,7 +36,7 @@ reg_settings_dict=dict(pls_cs=1,\
 
 ###
 rundate = datetime.now().strftime('%Y_%m_%d')
-savedir = "/Users/be348/nexoStuff/LArASIC/code/data/SingleWIBStands/"+rundate+"/" # ~ = /Users/be348=
+savedir = "/Users/be348/nexoStuff/LArASIC/code/data/testAug19/"+rundate+"/" # ~ = /Users/be348=
 
 #####
 from femb_qc import FEMB_QC

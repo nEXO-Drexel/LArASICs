@@ -31,6 +31,7 @@ class FEMB_QC:
         self.databkdir = "/Users/be348/nexoStuff/LArASIC/code/data"
         self.f_qcindex = self.databkdir + "tmp.csv"
         self.femb_qclist = []
+        self.last_file_saved = ""
         self.WIB_IPs = ["192.168.121.1"]
         self.pwr_n = 1
         self.CLS = CLS_CONFIG()
@@ -677,7 +678,8 @@ class FEMB_QC:
             self.CLS.pwr_int_f = False
             if (len(pwr_qcs) > 0 ):
                 fn =self.databkdir  + "FEMB_CHKOUT_" + pwr_qcs[0][1] +"_" + pwr_qcs[0][4] + ".bin"
-                print('saving... ',fn) 
+                self.last_file_saved = fn
+                print('saving... ',fn)
                 with open(fn, 'wb') as f:
                     pickle.dump(self.raw_data, f)
             self.FEMB_PLOT(pwr_int_f = pwr_int_f)

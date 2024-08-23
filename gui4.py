@@ -3,11 +3,9 @@ File Name: gui4.py
 Author: Brady Eckert and Kamayani Richhariya
 Email: be348@drexel.edu
 Description: 
-A class for the LArASIC gui. This allows sets up radio buttons for LArASIC settings and test pulses. Also has entry widgets for some input strings.
- The apply settings button sets reg_settings_dict to the selected options and retrieves text entries. 
- The take data button SHOULD take data using the selected register setiings. 
- The show plot button shows a basic plot in the window. Future iterations could display it in the window
-Usage: $ python3 /gui4.py
+A class for the LArASIC gui.
+Additions: nEXO logo
+Usage: $ python3 gui4.py
 Last modified: 2024 Aug 15
 """
 
@@ -15,19 +13,25 @@ import tkinter as tk
 import sys 
 import os
 import numpy as np
+import pickle
 import matplotlib 
 matplotlib.use('TkAgg')
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from PIL import ImageTk, Image
 from datetime import datetime
+
 from femb_qc import FEMB_QC
 
 class gui_class:
 
     def __init__(self,m):
         self.m = m
-        m.geometry('1000x600')
+        m.geometry('1000x800')
         self.Title = tk.Label(m, text='LArASIC settings control').grid(row=0, column=3, columnspan=2)
+        self.add_logo()
+        #self.logo = tk.Label(m, image=ImageTk.PhotoImage(Image.open('./images/nEXO-logo.png'))).grid(row=0,column=0, columnspan=2)
+         
 
         ## Register settings--see documentation for explanation of each key
         self.reg_settings_dict = dict(pls_cs=1, dac_sel=1, fpgadac_en=0, asicdac_en=0,\
@@ -38,10 +42,11 @@ class gui_class:
         ## other variables to set
         self.wibno='not set'
         self.fembno='not set'
-        self.fembslotno=1
+        self.fembslotno = 1
         self.environment='RT'
-        self.rundate=datetime.now().strftime('%Y_%m_%d')
+        self.rundate = datetime.now().strftime('%Y_%m_%d')
         self.savedir = "/Users/be348/nexoStuff/LArASIC/code/data/newdir/"+self.rundate+"/"
+        self.last_file = ""
 
         ## making the radio buttons and labels
         self.set_radio_buttons()
@@ -81,14 +86,17 @@ class gui_class:
         self.Showplot = tk.Button(m, text="Show Plot",command=self.showplot).grid(row=8, column=4, sticky='W')
 
         ## entries
-        self.WIBEntry = tk.Label(m, text="WIB #").grid(row=6, column=1, sticky='E')
-        self.WIBEntry1 = tk.Entry(m, textvariable=self.wibno_radio).grid(row=6, column=2,sticky='W')
+        self.WIBLabel = tk.Label(m, text="WIB #").grid(row=6, column=1, sticky='E')
+        self.WIBEntry = tk.Entry(m, textvariable=self.wibno_radio).grid(row=6, column=2,sticky='W')
 
-        self.FEMBEntry = tk.Label(m, text='FEMB #').grid(row=6, column=3, sticky='E')
-        self.FEMBEntry1 = tk.Entry(m, textvariable=self.fembno_radio).grid(row=6, column=4,sticky='W')
+        self.FEMBLabel = tk.Label(m, text='FEMB #').grid(row=6, column=3, sticky='E')
+        self.FEMBEntry = tk.Entry(m, textvariable=self.fembno_radio).grid(row=6, column=4,sticky='W')
 
-        self.ENVEntry = tk.Label(m, text='Environment').grid(row=6, column=5, sticky='E')
-        self.ENVEntry1 = tk.Entry(m, textvariable=self.env_radio).grid(row=6, column=6,sticky='W')
+        self.ENVLabel = tk.Label(m, text='Test Environment:').grid(row=6, column=5, sticky='E')
+        self.ENVEntry = tk.Entry(m, textvariable=self.env_radio).grid(row=6, column=6,sticky='W')
+
+        self.SaveDirLabel = tk.Label(m, text='Save Directory:').grid(row=7,column=1,sticky='E')
+        self.SaveDirEntry = tk.Entry(m, textvariable=self.savedir_radio,justify='left',width=80).grid(row=7,column=2,columnspan=5,sticky='W')
 
     ## set up radio buttons all together
     def set_radio_buttons(self):
@@ -101,9 +109,17 @@ class gui_class:
         self.wibno_radio = tk.StringVar()
         self.fembno_radio = tk.StringVar()
         self.fembslot_radio = tk.IntVar()
-        self.env_radio = tk.StringVar()
+        self.env_radio = tk.StringVar(value="RT")
+        self.savedir_radio=tk.StringVar(value=self.savedir)
 
-    ## functions for using the radio variables to modify the dictionary
+    ## adding nEXO logo
+    def add_logo(self):
+        img = ImageTk.PhotoImage(Image.open('/Users/be348/nexoStuff/LArASIC/code/nEXO/images/nEXO-logo.png').resize((300,100),Image.Resampling.LANCZOS))
+        self.logo = tk.Label(self.m,image=img)
+        self.logo.image = img
+        self.logo.grid(row=0,column=1,columnspan=2,sticky='NE')
+
+    ## functions for using the radio variables to modify the dictionary for options that change multiple bits
     def set_Gain(self,Gain_radio_dict):
         if   self.Gain_radio.get() == 4.7: return dict(Gain_radio_dict, sg0=0,sg1=0)
         elif self.Gain_radio.get() == 7.8: return dict(Gain_radio_dict, sg0=1,sg1=0)
@@ -129,7 +145,8 @@ class gui_class:
         self.reg_settings_dict = self.set_Input(self.reg_settings_dict)
         self.reg_settings_dict = dict(self.reg_settings_dict, sdf=self.SBF_radio.get(), snc=self.baseline_radio.get())
         self.wibno=self.wibno_radio.get()
-        self.environment.get()
+        self.environment=self.env_radio.get()
+        self.fembslotno=self.fembslot_radio.get()
 
     def takedatabutton(self):
         a=FEMB_QC()
@@ -141,44 +158,54 @@ class gui_class:
         a.CLS.WIB_IPs = a.WIB_IPs
         a.CLS.val = 100
 
-        a.userdir = self.savedir + "/WIB_" + self.wibno + "/"
+        a.userdir = self.savedir + "WIB_" + self.wibno + "/"
         a.databkdir = a.userdir 
         a.user_f = a.userdir + "tmp.csv"
         a.f_qcindex = a.databkdir + "tmp.csv"
 
-        if (os.path.exists(a.userdir )):
-            pass
+        if (os.path.exists(a.userdir )): pass
         else:
-            try:
-                os.makedirs(a.userdir )
-            except OSError:
-                print ("Error to create folder %s"%a.userdir )
-                sys.exit()
-        if (os.path.exists(a.databkdir )):
-            pass
+            try:  os.makedirs(a.userdir )
+            except OSError: print ("Error to create folder %s"%a.userdir ); sys.exit()
+        if (os.path.exists(a.databkdir )): pass
         else:
-            try:
-                os.makedirs(a.databkdir )
-            except OSError:
-                print ("Error to create folder %s"%a.databkdir )
-                sys.exit()
+            try: os.makedirs(a.databkdir )
+            except OSError: print ("Error to create folder %s"%a.databkdir ); sys.exit()
 
+        # power on and run with reg_settings_dict and produce the results pdf
         a.CLS.pwr_femb_ignore = False 
-        a.FEMB_CHKOUT(FEMB_infos, pwr_int_f = False, testcode = 0, ana_flg=True, reg_settings_dict=self.reg_settings_dict )
+        a.FEMB_CHKOUT(FEMB_infos, pwr_int_f = False, testcode = 0, ana_flg=True, reg_settings_dict=self.reg_settings_dict)
 
-        '''for wib_ip in a.WIB_IPs:
-            a.CLS.FEMBs_CE_OFF_DIR(wib_ip)'''
+        # power off the femb
         a.CLS.FEMBs_CE_OFF_DIR(a.WIB_IPs[0])
 
-        print ("Data saved at :", a.userdir)
+        self.last_file = a.last_file_saved
+        print ("Data saved at: ", a.userdir)
 
     def showplot(self):
-        fig=Figure(figsize=(6,3),dpi=100)
-        y=[i**2 for i in range(-10,11,1)]
+        ## showplot() will use the last file saved to display the waveforms, maybe it should be relabelled
+        
+        # set up the figure with size and resolution
+        fig=Figure(figsize=(5,3),dpi=150)
+        # retrieve the data from self.last_file (setting manually for now)
+        #with open(self.last_file,'rb') as f:
+        myfile = '/Users/be348/nexoStuff/LArASIC/code/data/newdir/2024_08_19//WIB_P6/FEMB_CHKOUT_RT_2024_08_19_12_55_14.bin'
+        with open(myfile,'rb') as f:
+            rawdata = pickle.load(f)
+        waveforms=rawdata[self.fembslotno-1][1][2][4]
+        #y=[i**2 for i in range(-10,11,1)]
+        
         plot1 = fig.add_subplot(111)
-        plot1.plot(y)
+        plot1.set_title('Waveform plot')
+        plot1.set_xlabel("Time ($\mu$s)")
+        plot1.set_ylabel("ADC/bin")
+        for chni in range(len(waveforms)):
+            plot1.plot((0.5*np.arange(500)),waveforms[chni],color='C%d'%(chni%9))
+        plot1.set_xbound(0,50)
+        fig.tight_layout()
+
         mycanvas = FigureCanvasTkAgg(fig,master=self.m)
-        mycanvas.get_tk_widget().grid(row=10,rowspan=3,column=1,columnspan=5)
+        mycanvas.get_tk_widget().grid(row=10,rowspan=5,column=1,columnspan=6)
 
 if __name__ == "__main__":
     print('running gui')
