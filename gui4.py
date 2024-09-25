@@ -4,12 +4,13 @@ Author: Brady Eckert and Kamayani Richhariya
 Email: be348@drexel.edu
 Description: 
 A class for the LArASIC gui.
-Additions: nEXO logo
+Future Additions: modify CLS.val and number of times to make data
 Usage: $ python3 gui4.py
-Last modified: 2024 Aug 15
+Last modified: 2024 Aug 23
 """
 
 import tkinter as tk
+#from tkinter import ttk
 import sys 
 import os
 import numpy as np
@@ -27,11 +28,10 @@ class gui_class:
 
     def __init__(self,m):
         self.m = m
+        m.title("LArASIC Control")
         m.geometry('1000x800')
         self.Title = tk.Label(m, text='LArASIC settings control').grid(row=0, column=3, columnspan=2)
         self.add_logo()
-        #self.logo = tk.Label(m, image=ImageTk.PhotoImage(Image.open('./images/nEXO-logo.png'))).grid(row=0,column=0, columnspan=2)
-         
 
         ## Register settings--see documentation for explanation of each key
         self.reg_settings_dict = dict(pls_cs=1, dac_sel=1, fpgadac_en=0, asicdac_en=0,\
@@ -112,9 +112,10 @@ class gui_class:
         self.env_radio = tk.StringVar(value="RT")
         self.savedir_radio=tk.StringVar(value=self.savedir)
 
-    ## adding nEXO logo
+    ## adding nEXO logo, it works
     def add_logo(self):
-        img = ImageTk.PhotoImage(Image.open('/Users/be348/nexoStuff/LArASIC/code/nEXO/images/nEXO-logo.png').resize((300,100),Image.Resampling.LANCZOS))
+        imagefilename = '/Users/be348/nexoStuff/LArASIC/code/nEXO/images/nEXO-logo.png'
+        img = ImageTk.PhotoImage(Image.open(imagefilename).resize((300,100),Image.Resampling.LANCZOS))
         self.logo = tk.Label(self.m,image=img)
         self.logo.image = img
         self.logo.grid(row=0,column=1,columnspan=2,sticky='NE')
@@ -144,9 +145,9 @@ class gui_class:
         self.reg_settings_dict = self.set_Shaping_time(self.reg_settings_dict)
         self.reg_settings_dict = self.set_Input(self.reg_settings_dict)
         self.reg_settings_dict = dict(self.reg_settings_dict, sdf=self.SBF_radio.get(), snc=self.baseline_radio.get())
-        self.wibno=self.wibno_radio.get()
-        self.environment=self.env_radio.get()
-        self.fembslotno=self.fembslot_radio.get()
+        self.wibno = self.wibno_radio.get()
+        self.environment = self.env_radio.get()
+        self.fembslotno = self.fembslot_radio.get()
 
     def takedatabutton(self):
         a=FEMB_QC()
@@ -184,17 +185,14 @@ class gui_class:
 
     def showplot(self):
         ## showplot() will use the last file saved to display the waveforms, maybe it should be relabelled
-        
-        # set up the figure with size and resolution
-        fig=Figure(figsize=(5,3),dpi=150)
+        fig=Figure(figsize=(5,3),dpi=200)
         # retrieve the data from self.last_file (setting manually for now)
         #with open(self.last_file,'rb') as f:
         myfile = '/Users/be348/nexoStuff/LArASIC/code/data/newdir/2024_08_19//WIB_P6/FEMB_CHKOUT_RT_2024_08_19_12_55_14.bin'
         with open(myfile,'rb') as f:
             rawdata = pickle.load(f)
         waveforms=rawdata[self.fembslotno-1][1][2][4]
-        #y=[i**2 for i in range(-10,11,1)]
-        
+
         plot1 = fig.add_subplot(111)
         plot1.set_title('Waveform plot')
         plot1.set_xlabel("Time ($\mu$s)")
@@ -205,7 +203,7 @@ class gui_class:
         fig.tight_layout()
 
         mycanvas = FigureCanvasTkAgg(fig,master=self.m)
-        mycanvas.get_tk_widget().grid(row=10,rowspan=5,column=1,columnspan=6)
+        mycanvas.get_tk_widget().grid(row=10,rowspan=2,column=1,columnspan=4)
 
 if __name__ == "__main__":
     print('running gui')
