@@ -6,7 +6,7 @@ Description:
 A class for the LArASIC gui.
 Future Additions: modify CLS.val and number of times to make data
 Usage: $ python3 gui4.py
-Last modified: 2024 Aug 23
+Last modified: 2024 Sep 25
 """
 
 import tkinter as tk

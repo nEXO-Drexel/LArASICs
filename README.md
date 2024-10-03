@@ -21,8 +21,8 @@ I used this one to try to figure out how to take data more directly. Didn't fini
 I used this one for testing the single-WIB stands. It was easy to change the WIB and FEMB number to quickly check for connections. Also worked with the WIB's with firmware version 0x119. 
 
 # Using the GUI
-## Gui1.py
+Use the script gui4.py for now. I will rename it something better later. To see the development and changes, see the other gui scripts in rough/ . 
+## Gui4.py
 ```
-python3 Gui1.py
+python3 Gui4.py
 ```
-I took the gui code from GUI_LArASIC.ipynb and put it into a .py file.
