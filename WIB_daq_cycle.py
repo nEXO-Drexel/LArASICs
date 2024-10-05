@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-File Name: WIB_script3.py
+File Name: WIB_daq_cycle.py
 Author: Brady Eckert
-Email: beckert@bnl.gov/brady.eckert@drexel.edu
+Email: be348@drexel.edu
 Description: 
 This script will be used for testing WIBs and FEMBs for the single-WIB stands
-Last modified: 2024 Jun 12
+Last modified: 2024 Oct 4
 """
 
 import numpy as np
@@ -36,24 +36,23 @@ reg_settings_dict=dict(pls_cs=1,\
 
 ###
 rundate = datetime.now().strftime('%Y_%m_%d')
-savedir = "/Users/be348/nexoStuff/LArASIC/code/data/testAug19/"+rundate+"/" # ~ = /Users/be348=
+savedir = "./data/"+rundate+"/" 
 
 #####
 from femb_qc import FEMB_QC
 a=FEMB_QC()
 
 ### Setting some identifiers 
-#crateno=1         # WarmInterfaceElectronicsCrate number
-#PTBslotno=1       # PowerTimingBackplate number
-wibno_str="P6"
-fembno_str="731"  # FEMB identifier number
+wibno_str="P6"    # WIB ID number
+fembno_str="731"  # FEMB ID number
 a.env="RT"        # test environment
-fembslotno=2 ;a.CLS.femb_sws[fembslotno-1]=1
+fembslotno=2      # FEMB slot number
+a.CLS.femb_sws[fembslotno-1]=1
 
 ## 
 a.CLS.WIB_ver = 0x120 
-FEMB_infos = a.FEMB_CHKOUT_Input()#crateno, PTBslotno)
-#print('FEMB_infos: ',FEMB_infos)
+FEMB_infos = a.FEMB_CHKOUT_Input()
+
 a.WIB_IPs = ["192.168.121.1"]
 a.CLS.UDP.MultiPort = False
 a.CLS.WIB_IPs = a.WIB_IPs
@@ -61,8 +60,7 @@ a.CLS.val = 100    #UDP HS package collected
 
 
 ### Setting up directories for saving the data
-#a.userdir = savedir + "/FEMB_" + fembno_str + "_" + a.env + "/"
-a.userdir = savedir + "/WIB_" + wibno_str + "/"
+a.userdir = savedir + "/WIB_" + wibno_str + "_FEMB_" + fembno_str + "/"
 a.databkdir = a.userdir 
 a.user_f = a.userdir + "tmp.csv"
 a.f_qcindex = a.databkdir + "tmp.csv"
@@ -86,11 +84,9 @@ else:
 
 # Power on, run test code 0 with the settings from reg_settings_dict
 a.CLS.pwr_femb_ignore = False 
-a.FEMB_CHKOUT(FEMB_infos, pwr_int_f = False, testcode = 0, ana_flg=True, reg_settings_dict=reg_settings_dict )
+a.FEMB_CHKOUT(FEMB_infos, ana_flg=True, reg_settings_dict=reg_settings_dict )
 
 ## Power off
-'''for wib_ip in a.WIB_IPs:
-    a.CLS.FEMBs_CE_OFF_DIR(wib_ip)'''
 a.CLS.FEMBs_CE_OFF_DIR(a.WIB_IPs[0])
 
 print ("Data saved at :", a.userdir)

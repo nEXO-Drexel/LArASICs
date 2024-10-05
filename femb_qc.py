@@ -96,7 +96,7 @@ class FEMB_QC:
         self.CLS.WIBs_SCAN()
         self.CLS.FEMBs_SCAN()
         self.CLS.WIBs_CFG_INIT()
-        testn = testcode % 10
+        testn = 0 #testcode % 10
         #print('FEMB_CHK_ACQ: testn= ',testn)
         if testn == 0:
             cfglog = self.CLS.CE_CHK_CFG(pls_cs = rs['pls_cs'], \
@@ -115,7 +115,6 @@ class FEMB_QC:
             #14mV/fC, 2.0us, 200mV, FPGA_DAC enable = 0x08
             #cfglog = self.CLS.CE_CHK_CFG(pls_cs=2, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=0, sg1=1, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
             cfglog = self.CLS.CE_CHK_CFG(pls_cs=1, dac_sel=1, fpgadac_en=1, fpgadac_v=0x08, sts=1, sg0=0, sg1=1, st0 =1, st1=1, snc=1, swdac1=1, swdac2=0, data_cs=0)
-        # I deleted the testn 2-9 options
         else:
             print('Something went wrong')
             sys.exit()
@@ -667,7 +666,7 @@ class FEMB_QC:
             FEMB_infos.append("SLOT%d"%i + "\n" + FEMB_id + "\n" + env + "\n" + rerun_f + "\n" + c_ret )
         return FEMB_infos
 
-    def FEMB_CHKOUT(self, FEMB_infos, pwr_int_f = False, testcode = 1, ana_flg=True, reg_settings_dict=None):
+    def FEMB_CHKOUT(self, FEMB_infos, pwr_int_f = False, testcode = 0, ana_flg=True, reg_settings_dict=None):
         #print('running FEMB_CHKOUT')
         pwr_qcs = []
         self.CLS.pwr_int_f = pwr_int_f

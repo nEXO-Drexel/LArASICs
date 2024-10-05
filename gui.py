@@ -4,9 +4,9 @@ Author: Brady Eckert and Kamayani Richhariya
 Email: be348@drexel.edu
 Description: 
 A class for the LArASIC gui.
-Future Additions: modify CLS.val and number of times to make data
+Future Additions: Add input for CLS.val to control how many UDP packages to take
 Usage: $ python3 gui4.py
-Last modified: 2024 Sep 25
+Last modified: 2024 Oct 4
 """
 
 import tkinter as tk
@@ -45,7 +45,7 @@ class gui_class:
         self.fembslotno = 1
         self.environment='RT'
         self.rundate = datetime.now().strftime('%Y_%m_%d')
-        self.savedir = "/Users/be348/nexoStuff/LArASIC/code/data/newdir/"+self.rundate+"/"
+        self.savedir = "../data/newdir/"+self.rundate+"/"
         self.last_file = ""
 
         ## making the radio buttons and labels
@@ -114,7 +114,7 @@ class gui_class:
 
     ## adding nEXO logo, it works
     def add_logo(self):
-        imagefilename = '/Users/be348/nexoStuff/LArASIC/code/nEXO/images/nEXO-logo.png'
+        imagefilename = './images/nEXO-logo.png'
         img = ImageTk.PhotoImage(Image.open(imagefilename).resize((300,100),Image.Resampling.LANCZOS))
         self.logo = tk.Label(self.m,image=img)
         self.logo.image = img
@@ -188,7 +188,7 @@ class gui_class:
         fig=Figure(figsize=(5,3),dpi=200)
         # retrieve the data from self.last_file (setting manually for now)
         #with open(self.last_file,'rb') as f:
-        myfile = '/Users/be348/nexoStuff/LArASIC/code/data/newdir/2024_08_19//WIB_P6/FEMB_CHKOUT_RT_2024_08_19_12_55_14.bin'
+        myfile = '../data/newdir/2024_08_19//WIB_P6/FEMB_CHKOUT_RT_2024_08_19_12_55_14.bin'
         with open(myfile,'rb') as f:
             rawdata = pickle.load(f)
         waveforms=rawdata[self.fembslotno-1][1][2][4]
